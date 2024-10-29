@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 
 NUM_WORKERS = os.cpu_count()
 
-def create_dataloaders(
+def create_dataLoaders(
     train_dir: str, 
     test_dir: str, 
     transform: transforms.Compose, 
@@ -29,11 +29,11 @@ def create_dataloaders(
     num_workers: An integer for number of workers per DataLoader.
 
   Returns:
-    A tuple of (train_dataloader, test_dataloader, class_names).
+    A tuple of (train_dataLoader, test_dataoader, class_names).
     Where class_names is a list of the target classes.
     Example usage:
-      train_dataloader, test_dataloader, class_names = \
-        = create_dataloaders(train_dir=path/to/train_dir,
+      train_dataLoader, test_dataLoader, class_names = \
+        = create_dataLoaders(train_dir=path/to/train_dir,
                              test_dir=path/to/test_dir,
                              transform=some_transform,
                              batch_size=32,

@@ -7,7 +7,7 @@ from tqdm.auto import tqdm
 from typing import Dict, List, Tuple
 
 def train_step(model: torch.nn.Module, 
-               dataloader: torch.utils.data.DataLoader, 
+               dataLoader: torch.utils.data.DataLoader, 
                loss_fn: torch.nn.Module, 
                optimizer: torch.optim.Optimizer,
                device: torch.device) -> Tuple[float, float]:
@@ -19,7 +19,7 @@ def train_step(model: torch.nn.Module,
 
     Args:
     model: A PyTorch model to be trained.
-    dataloader: A DataLoader instance for the model to be trained on.
+    dataLoader: A DataLoader instance for the model to be trained on.
     loss_fn: A PyTorch loss function to minimize.
     optimizer: A PyTorch optimizer to help minimize the loss function.
     device: A target device to compute on (e.g. "cuda" or "cpu").
@@ -37,7 +37,7 @@ def train_step(model: torch.nn.Module,
     train_loss, train_acc = 0, 0
 
     # Loop through data loader data batches
-    for batch, (X, y) in enumerate(dataloader):
+    for batch, (X, y) in enumerate(dataLoader):
         # Send data to target device
         X, y = X.to(device), y.to(device)
 
@@ -62,12 +62,12 @@ def train_step(model: torch.nn.Module,
         train_acc += (y_pred_class == y).sum().item()/len(y_pred)
 
     # Adjust metrics to get average loss and accuracy per batch 
-    train_loss = train_loss / len(dataloader)
-    train_acc = train_acc / len(dataloader)
+    train_loss = train_loss / len(dataLoader)
+    train_acc = train_acc / len(dataLoader)
     return train_loss, train_acc
 
 def test_step(model: torch.nn.Module, 
-              dataloader: torch.utils.data.DataLoader, 
+              dataLoader: torch.utils.data.DataLoader, 
               loss_fn: torch.nn.Module,
               device: torch.device) -> Tuple[float, float]:
     """Tests a PyTorch model for a single epoch.
@@ -77,7 +77,7 @@ def test_step(model: torch.nn.Module,
 
     Args:
     model: A PyTorch model to be tested.
-    dataloader: A DataLoader instance for the model to be tested on.
+    dataLoader: A DataLoader instance for the model to be tested on.
     loss_fn: A PyTorch loss function to calculate loss on the test data.
     device: A target device to compute on (e.g. "cuda" or "cpu").
 
@@ -96,7 +96,7 @@ def test_step(model: torch.nn.Module,
     # Turn on inference context manager
     with torch.inference_mode():
         # Loop through DataLoader batches
-        for batch, (X, y) in enumerate(dataloader):
+        for batch, (X, y) in enumerate(dataLoader):
             # Send data to target device
             X, y = X.to(device), y.to(device)
 
@@ -112,13 +112,13 @@ def test_step(model: torch.nn.Module,
             test_acc += ((test_pred_labels == y).sum().item()/len(test_pred_labels))
 
     # Adjust metrics to get average loss and accuracy per batch 
-    test_loss = test_loss / len(dataloader)
-    test_acc = test_acc / len(dataloader)
+    test_loss = test_loss / len(dataLoader)
+    test_acc = test_acc / len(dataLoader)
     return test_loss, test_acc
 
 def train(model: torch.nn.Module, 
-          train_dataloader: torch.utils.data.DataLoader, 
-          test_dataloader: torch.utils.data.DataLoader, 
+          train_dataLoader: torch.utils.data.DataLoader, 
+          test_dataLoader: torch.utils.data.DataLoader, 
           optimizer: torch.optim.Optimizer,
           loss_fn: torch.nn.Module,
           epochs: int,
@@ -133,8 +133,8 @@ def train(model: torch.nn.Module,
 
     Args:
     model: A PyTorch model to be trained and tested.
-    train_dataloader: A DataLoader instance for the model to be trained on.
-    test_dataloader: A DataLoader instance for the model to be tested on.
+    train_dataLoader: A DataLoader instance for the model to be trained on.
+    test_dataLoader: A DataLoader instance for the model to be tested on.
     optimizer: A PyTorch optimizer to help minimize the loss function.
     loss_fn: A PyTorch loss function to calculate loss on both datasets.
     epochs: An integer indicating how many epochs to train for.
@@ -167,12 +167,12 @@ def train(model: torch.nn.Module,
     # Loop through training and testing steps for a number of epochs
     for epoch in tqdm(range(epochs)):
         train_loss, train_acc = train_step(model=model,
-                                          dataloader=train_dataloader,
+                                          dataLoader=train_dataLoader,
                                           loss_fn=loss_fn,
                                           optimizer=optimizer,
                                           device=device)
         test_loss, test_acc = test_step(model=model,
-          dataloader=test_dataloader,
+          dataLoader=test_dataLoader,
           loss_fn=loss_fn,
           device=device)
 
